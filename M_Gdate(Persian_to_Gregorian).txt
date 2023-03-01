@@ -1,0 +1,21 @@
+// Power Query / M
+// This Function Convert Persian Date ( e.g. Pdate ) to Gregorian Date.
+// By : Ghasem Samini Moghadam (gh.samini@gmail.com
+let
+    Source = (Pdate as text) =>
+let
+    Year_  = Int32.From(Text.Middle(Pdate, 0, 4)),
+    Month_ = Int32.From(Text.Middle(Pdate, 5, 2)),
+    Day_   = Int32.From(Text.Middle(Pdate, 8, 2)),
+    Dstart_ ="110011001110111011101110111011101110111011111111111111111111111111111111111121112111211121112111211121112111221122112211221122112211221122112221222122212221222122212221222122222222111111111111111111111" ,
+	Ystart_   = 1921 ,
+    Gfirst_  = 276 + 10 + Number.FromText(Text.Middle(@Dstart_,@Year_+ 622 + 0 - Ystart_,1)),
+    Days_  = if Month_ <= 7 then 
+        (Month_ - 1) * 31 + Day_ 
+    else
+        (Month_ - 1) * 30 + 6 + Day_ ,
+    Source= Date.AddDays(#date(Year_ + 622 , 1 , 1) , Days_ - Gfirst_)
+in
+    Source
+in
+    Source

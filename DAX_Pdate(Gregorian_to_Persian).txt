@@ -1,0 +1,26 @@
+DAX_Pdate = 
+// DAX ( Data Analysis Expression )
+// This Function Convert Gregorian Date ( e.g. Gdate ) to Persian( Jalali ) Date.
+// By : Ghasem Samini Moghadam (gh.samini@gmail.com
+  VAR Gdate = CurrentYear[YMD]
+  VAR Eyear = Year(Gdate)  
+  VAR YKB = Eyear
+  VAR Kb0 = IF(MOD((YKB-622+2346)*(683./2820), 1) < (683./2820),1,0)
+  VAR Kb = IF( (YKB-622) IN {1210,1242,1243,1436,1437,1469,1470} ,-Kb0,Kb0)
+  VAR Dstart_ ="110011001110111011101110111011101110111011111111111111111111111111111111111121112111211121112111211121112111221122112211221122112211221122112221222122212221222122212221222122222222111111111111111111111"
+  VAR Ystart_   = 1921
+  VAR DY = DATEDIFF(DATE(Eyear,1,1),GDate,DAY) + 1 + 9 +MID(Dstart_,YKB+1-Ystart_,1) 
+  VAR OV = ROUNDDOWN((SIGN(DY - 89 - Kb) + 1) / 2 ,0)
+  VAR MT = IF( DY - 30 > 0 , 1 , 0) + IF( DY - 60 > 0,1,0) + IF(DY - 89 - Kb > 0,1,0)
+         + IF(DY - 120 - Kb > 0,1,0) + IF(DY - 151 - Kb > 0,1,0) + IF(DY - 182- Kb > 0,1,0)
+         + IF(DY - 213 - Kb > 0,1,0) + IF(DY - 244 - Kb > 0,1,0) + IF(DY - 275 - Kb > 0,1,0)
+         + IF(DY - 305- Kb > 0,1,0) + IF(DY - 335 - Kb > 0,1,0) + IF(DY - 365 - Kb > 0 ,1,0)
+  VAR FracY = (Eyear - 622 + OV)
+  VAR FracM = (Mod(MT + 10 + OV,13)) 
+  VAR FracD = (DY 
+            - IF(DY > 30 ,30,0) - IF(DY > 60 ,30,0) - IF(DY > 89  + Kb,29 + Kb,0) 
+            - IF(DY > 120 + Kb,31,0) - IF(DY > 151 + Kb,31,0) - IF(DY > 182 + Kb,31,0) 
+            - IF(DY > 213 + Kb,31,0) - IF(DY > 244 + Kb,31,0) - IF(DY > 275 + Kb,31,0)
+            - IF(DY > 305 + Kb,30,0) - IF(DY > 335 + Kb,30,0) - IF(DY > 365 + Kb,30,0)
+            )
+ RETURN FORMAT(FracY*10000+FracM*100+fracD,"####/##/##")

@@ -1,0 +1,33 @@
+// Power Query / M
+// This Function Convert Gregorian Date ( e.g. Gdate ) to Persian( Jalali ) Date,
+// By : Ghasem Samini Moghadam (gh.samini@gmail.com
+let
+    Source = (Gdate as date) =>
+let
+    Eyear = Date.Year(Gdate),
+    YKB = Eyear,
+    Kb0 = if(Number.Mod((YKB-622+2346)*(683.0/2820), 1) < (683.0/2820)) then 1 else 0,
+    Kb = (if List.Contains({1210,1242,1243,1436,1437,1469,1470},(YKB-622)) then -Kb0 else Kb0) ,
+
+	Dstart_ ="110011001110111011101110111011101110111011111111111111111111111111111111111121112111211121112111211121112111221122112211221122112211221122112221222122212221222122212221222122222222111111111111111111111" ,
+
+	Ystart_   = 1921 ,
+     
+    DY = Date.DayOfYear(Gdate) + 0 + 9 + Number.FromText(Text.Middle(Dstart_,YKB+0-Ystart_,1)) ,  // 0
+    OV = Number.RoundDown((Number.Sign(DY - 89 - Kb) + 1) / 2 ),
+    MT = (if DY - 30 > 0 then 1 else 0) + (if DY - 60 > 0 then 1 else 0 ) + (if DY - 89 - Kb > 0 then 1 else 0)
+        + (if DY - 120 - Kb > 0 then 1 else 0) + (if DY - 151 - Kb > 0 then 1 else 0) + (if DY - 182- Kb > 0 then 1 else 0)
+        + (if DY - 213 - Kb > 0 then 1 else 0) + (if DY - 244 - Kb > 0 then 1 else 0) + (if DY - 275 - Kb > 0 then 1 else 0)
+        + (if DY - 305- Kb > 0 then 1 else 0) + (if DY - 335 - Kb > 0 then 1 else 0) + (if DY - 365 - Kb > 0 then 1 else 0),
+    FracY = Text.From(Eyear - 622 + OV),
+    FracM = Text.From(Number.Mod(MT + 10 + OV,13)),
+    FracD = Text.From(DY - (if DY > 30 then 30 else 0) - (if DY > 60 then 30 else 0) - (if DY > 89 + Kb then 29 + Kb else 0) 
+        - (if DY > 120 + Kb then 31 else 0) - (if DY > 151 + Kb then 31 else 0) - (if DY > 182 + Kb then 31 else 0) 
+        - (if DY > 213 + Kb then 31 else 0) - (if DY > 244 + Kb then 31 else 0) - (if DY > 275 + Kb then 31 else 0)
+        - (if DY > 305 + Kb then 30 else 0) - (if DY > 335 + Kb then 30 else 0) - (if DY > 365 + Kb then 30 else 0)),
+    Source0 = FracY & "/" & Text.End("0" & FracM, 2) & "/" & Text.End("0" & FracD, 2),
+    Source = Source0
+in
+    Source
+in
+    Source
