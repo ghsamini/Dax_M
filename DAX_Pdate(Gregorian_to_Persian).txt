@@ -1,4 +1,4 @@
-DAX_Pdate = 
+DAX_Pdate =  
 // DAX ( Data Analysis Expression )
 // This Function Convert Gregorian Date ( e.g. Gdate ) to Persian( Jalali ) Date.
 // By : Ghasem Samini Moghadam (gh.samini@gmail.com
