@@ -1,4 +1,4 @@
-// Power Query / M 
+// Power Query / M
 // This Function Convert Persian Date ( e.g. Pdate ) to Gregorian Date.
 // By : Ghasem Samini Moghadam (gh.samini@gmail.com
 let
